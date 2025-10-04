@@ -1,6 +1,3 @@
-// 1) Configure NASA API key
-const NASA_API_KEY = "hlqUG5cNgu2tGYHVmmA4SKe5zPirkNeVIu4BvP2J"; // API Key
-
 const statusEl = document.getElementById("status");
 const resultsEl = document.getElementById("results");
 const startEl = document.getElementById("startDate");
@@ -77,14 +74,11 @@ function setStatus(msg, isError = false) {
   statusEl.className = isError ? "status error" : "status";
 }
 
+// --- NASA DONKI via Netlify function ---
 async function fetchDONKIFlares(startDate, endDate) {
-  const url = new URL("https://api.nasa.gov/DONKI/FLR");
-  url.searchParams.set("startDate", startDate);
-  url.searchParams.set("endDate", endDate);
-  url.searchParams.set("api_key", NASA_API_KEY);
-
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`DONKI request failed (${res.status})`);
+  const url = `/.netlify/functions/donki?startDate=${startDate}&endDate=${endDate}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`DONKI proxy failed (${res.status})`);
   return res.json();
 }
 
@@ -95,7 +89,7 @@ const wavelengthMap = {
   "211": 15
 };
 
-// Try chosen wavelength first, then fallbacks
+// --- Helioviewer via Netlify function ---
 async function fetchHelioviewerScreenshot(peakTime, chosenWavelength) {
   const fallbackOrder = [chosenWavelength, "193", "171", "211"];
   const tried = new Set();
@@ -108,31 +102,22 @@ async function fetchHelioviewerScreenshot(peakTime, chosenWavelength) {
       const sourceId = wavelengthMap[wl];
       if (!sourceId) continue;
 
-      // Step 1: Find nearest valid image
-      const closestUrl = `/.netlify/functions/hv-proxy?date=${toISOSeconds(peakTime)}&sourceId=${sourceId}`;
+      // Step 1: getClosestImage via proxy
+      const closestUrl = `/.netlify/functions/helioviewer?endpoint=getClosestImage&date=${toISOSeconds(peakTime)}&sourceId=${sourceId}`;
       const closestRes = await fetch(closestUrl);
       if (!closestRes.ok) continue;
       const closestData = await closestRes.json();
       if (!closestData.date) continue;
 
-      // Step 2: Request screenshot job
-      const screenshotUrl = new URL("https://api.helioviewer.org/v2/takeScreenshot/");
-      screenshotUrl.searchParams.set("date", closestData.date.replace(" ", "T") + "Z");
-      screenshotUrl.searchParams.set("imageScale", "2.5");
-      screenshotUrl.searchParams.set("layers", `[SDO,AIA,${wl},1,100]`);
-      screenshotUrl.searchParams.set("x0", "0");
-      screenshotUrl.searchParams.set("y0", "0");
-      screenshotUrl.searchParams.set("width", "1024");
-      screenshotUrl.searchParams.set("height", "1024");
-      screenshotUrl.searchParams.set("format", "jpg");
-
-      const screenshotRes = await fetch(screenshotUrl.toString());
+      // Step 2: takeScreenshot via proxy
+      const screenshotUrl = `/.netlify/functions/helioviewer?endpoint=takeScreenshot&date=${closestData.date.replace(" ", "T")}Z&imageScale=2.5&layers=[SDO,AIA,${wl},1,100]&x0=0&y0=0&width=1024&height=1024&format=jpg`;
+      const screenshotRes = await fetch(screenshotUrl);
       if (!screenshotRes.ok) continue;
       const screenshotData = await screenshotRes.json();
       if (!screenshotData.id) continue;
 
-      // Step 3: Download actual image
-      return `https://api.helioviewer.org/v2/downloadScreenshot/?id=${screenshotData.id}`;
+      // Step 3: downloadScreenshot via proxy
+      return `/.netlify/functions/helioviewer?endpoint=downloadScreenshot&id=${screenshotData.id}`;
     } catch (err) {
       console.warn(`Helioviewer failed for ${wl}Å:`, err);
       continue;
@@ -188,4 +173,3 @@ function makeCard(f) {
   `;
   return card;
 }
-
