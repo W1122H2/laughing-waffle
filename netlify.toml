@@ -1,0 +1,14 @@
+[build]
+  # No build step needed for plain HTML/JS
+  command = ""
+  # Serve files from the root folder (where index.html is)
+  publish = "."
+
+  # Tell Netlify where your serverless functions are
+  functions = "netlify/functions"
+
+# Optional: cleaner API-style paths
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
