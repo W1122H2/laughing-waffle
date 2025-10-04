@@ -1,6 +1,5 @@
-export async function handler(event, context) {
+export async function handler(event) {
   const { endpoint, ...params } = event.queryStringParameters;
-
   if (!endpoint) {
     return { statusCode: 400, body: "Missing endpoint parameter" };
   }
@@ -10,7 +9,7 @@ export async function handler(event, context) {
   try {
     const res = await fetch(target);
 
-    // Special case: downloadScreenshot returns an image
+    // Special case: binary image
     if (endpoint === "downloadScreenshot") {
       const buffer = await res.arrayBuffer();
       return {
@@ -20,7 +19,7 @@ export async function handler(event, context) {
           "Content-Type": "image/jpeg"
         },
         body: Buffer.from(buffer).toString("base64"),
-        isBase64Encoded: true   // <-- critical for Netlify to send binary
+        isBase64Encoded: true   // <-- absolutely required
       };
     }
 
