@@ -1,5 +1,5 @@
-// 1) Configure your NASA API key
-const NASA_API_KEY = "hlqUG5cNgu2tGYHVmmA4SKe5zPirkNeVIu4BvP2J"; // Replace with your personal key from api.nasa.gov
+// 1) Configure NASA API key
+const NASA_API_KEY = "hlqUG5cNgu2tGYHVmmA4SKe5zPirkNeVIu4BvP2J"; // API Key
 
 const statusEl = document.getElementById("status");
 const resultsEl = document.getElementById("results");
@@ -109,7 +109,7 @@ async function fetchHelioviewerScreenshot(peakTime, chosenWavelength) {
       if (!sourceId) continue;
 
       // Step 1: Find nearest valid image
-      const closestUrl = `https://api.helioviewer.org/v2/getClosestImage/?date=${toISOSeconds(peakTime)}&sourceId=${sourceId}`;
+      const closestUrl = `/.netlify/functions/hv-proxy?date=${toISOSeconds(peakTime)}&sourceId=${sourceId}`;
       const closestRes = await fetch(closestUrl);
       if (!closestRes.ok) continue;
       const closestData = await closestRes.json();
@@ -188,3 +188,4 @@ function makeCard(f) {
   `;
   return card;
 }
+
