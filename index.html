@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solar Flare Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="stars"></div>
+
+  <header>
+    <div class="title">Solar Flare Explorer</div>
+    <div class="subtitle">Explore NASA solar flares with timestamped SDO/AIA imagery</div>
+  </header>
+
+  <section class="controls">
+    <div class="control-group">
+      <div class="label">Start date</div>
+      <input type="date" id="startDate" />
+    </div>
+    <div class="control-group">
+      <div class="label">End date</div>
+      <input type="date" id="endDate" />
+    </div>
+    <div class="control-group">
+      <div class="label">Wavelength</div>
+      <select id="wavelength">
+        <option value="193" selected>193 Å (coronal)</option>
+        <option value="171">171 Å (quiet corona)</option>
+        <option value="211">211 Å (active regions)</option>
+      </select>
+    </div>
+    <div class="actions">
+      <button class="primary" id="searchBtn">Search</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+  </section>
+
+  <div class="status" id="status"></div>
+  <section class="results" id="results"></section>
+
+  <footer>
+    Built with NASA DONKI and Helioviewer APIs.
+  </footer>
+
+  <!-- Link to external JS -->
+  <script src="app.js"></script>
+</body>
+</html>
