@@ -20,11 +20,11 @@ export async function handler(event, context) {
           "Content-Type": "image/jpeg"
         },
         body: Buffer.from(buffer).toString("base64"),
-        isBase64Encoded: true
+        isBase64Encoded: true   // <-- critical for Netlify to send binary
       };
     }
 
-    // Default: JSON or text endpoints
+    // Default: JSON/text endpoints
     const text = await res.text();
     return {
       statusCode: 200,
