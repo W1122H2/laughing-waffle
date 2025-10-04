@@ -9,6 +9,22 @@ export async function handler(event, context) {
 
   try {
     const res = await fetch(target);
+
+    // Special case: downloadScreenshot returns an image
+    if (endpoint === "downloadScreenshot") {
+      const buffer = await res.arrayBuffer();
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "image/jpeg"
+        },
+        body: Buffer.from(buffer).toString("base64"),
+        isBase64Encoded: true
+      };
+    }
+
+    // Default: JSON or text endpoints
     const text = await res.text();
     return {
       statusCode: 200,
