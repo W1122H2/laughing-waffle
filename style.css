@@ -108,3 +108,41 @@ footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .flare-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .flare-card img {
+    max-width: 90%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .flare-card h3 {
+    font-size: 1.2rem;
+  }
+  .flare-card p {
+    font-size: 1rem;
+  }
+
+  .flare-card a {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 1rem;
+  }
+}
+
+/* Extra tweak for very small phones */
+@media (max-width: 480px) {
+  .flare-card h3 {
+    font-size: 1rem;
+  }
+  .flare-card p {
+    font-size: 0.9rem;
+  }
+}
