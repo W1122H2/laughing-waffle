@@ -108,54 +108,54 @@ footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-/* === Flexible defaults for all screens === */
-.flare-card {
+/* Flexible defaults for all screens */
+.card {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 20px;
-  max-width: 100%; /* replaces fixed width */
+  max-width: 100%;
 }
 
-.flare-card img {
-  max-width: 100%; /* replaces fixed pixel width */
-  height: auto;    /* keeps aspect ratio */
+.card img {
+  max-width: 100%;
+  height: auto;
 }
 
-.flare-card h3 {
-  font-size: 1.25rem; /* scales with root font size */
+.card h3 {
+  font-size: 1.25rem;
 }
 
-.flare-card p {
+.card p {
   font-size: 1rem;
 }
 
-.flare-card a {
+.card a {
   display: inline-block;
   font-size: 1rem;
-  padding: 8px 14px; /* touch-friendly */
+  padding: 8px 14px;
 }
 
-/* === Responsive adjustments for smaller screens === */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-  .flare-card {
+  .card {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 10px;
   }
 
-  .flare-card img {
+  .card img {
     margin-bottom: 10px;
   }
 }
 
-/* === Extra tweaks for very small phones === */
+/* Extra tweaks for very small phones */
 @media (max-width: 480px) {
-  .flare-card h3 {
+  .card h3 {
     font-size: 1rem;
   }
-  .flare-card p {
+  .card p {
     font-size: 0.9rem;
   }
 }
